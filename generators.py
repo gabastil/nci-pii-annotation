@@ -20,6 +20,7 @@ def generate_mrn(length=8, alphanum=2):
 
 
 class PII:
+    '''Simple PII generator class that pulls data from a fake address generator website.'''
 
     def __init__(self, url="https://www.fakeaddressgenerator.com/"):
         self.url = url
@@ -34,13 +35,21 @@ class PII:
         raise ValueError(f'Response status bad {response.status_code}. No profile could be returned.')
 
     def parse_profile(self, content):
-        ''' Return a dict of randomly generated PII values '''
+        ''' Return a dict of randomly generated PII values
+
+        Parameters
+        ----------
+            content (string): raw HTML content from GET request
+        '''
         soup = bs(content, 'html.parser')
 
-        demographics = {}
         table_rows = soup.find('table').findAll('tr')
+        other_rows = soup.findAll('div', {'class': 'row item'})
+        all_rows = table_rows + other_rows
 
-        for i, tr in enumerate(table_rows):
+        demographics = {}
+        # Main demographic section
+        for i, tr in enumerate(all_rows):
             values = []
             for tag in 'span strong'.split():
                 text = tr.find(tag).text.encode('ascii', 'replace')
@@ -49,9 +58,9 @@ class PII:
                 if text:
                     values.append(text)
                 else:
-                    values.append(i)
-
-            demographics.setdefault(*values)
+                    break
+            else:
+                demographics.setdefault(*values)
 
         return demographics
 
