@@ -25,6 +25,18 @@ class PII:
     def __init__(self, url="https://www.fakeaddressgenerator.com/"):
         self.url = url
 
+    def __repr__(self):
+        ''' Generate a random profile and pretty print it to the screen '''
+        data = self.generate()
+        profile = None
+
+        if data:
+            items = data.items()
+            width = max(len(a) for a, b in items)
+            profile = '\n'.join(f'{a:>{width}}: {b}' for a, b in items)
+
+        return f"PII(profile=\n{profile}\n)"
+
     def generate(self):
         ''' Return a randomly generated profile '''
         response = requests.get(self.url)
@@ -32,7 +44,7 @@ class PII:
         if response.status_code==200:
             return self.parse_profile(response.content)
 
-        raise ValueError(f'Response status bad {response.status_code}. No profile could be returned.')
+        print(f'Response status bad {response.status_code}. No profile could be returned.')
 
     def parse_profile(self, content):
         ''' Return a dict of randomly generated PII values
