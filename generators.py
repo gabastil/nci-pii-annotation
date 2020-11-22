@@ -11,7 +11,7 @@ def generate_id(length=20):
     ''' Create a random pathology ID of a specified length '''
     numbers = array(list(digits))
     indices = randint(0, 10, length)
-    return numbers[indices]
+    return ''.join(numbers[indices])
 
 def generate_mrn(length=8, alphanum=2):
     ''' Create a random medical record number (MRN) '''
@@ -77,8 +77,30 @@ class PII:
         return demographics
 
 
-
 if __name__=="__main__":
-    print(generate_id())
-    pii = PII()
-    print(pii.generate())
+    from optparse import OptionParser
+
+    # Enable command line argument parsing
+    parser = OptionParser()
+    config = [
+        (['-t'], dict(dest='type', type=str, default='pii')),
+        (['-l'], dict(dest='length', type=str, default=20))
+    ]
+
+    for (flags, kwargs) in config:
+        parser.add_option(*flags, **kwargs)
+
+    options, args = parser.parse_args()
+    options.type = options.type.lower()
+    options.length = int(options.length)
+
+    if options.type == 'pii':
+        print(PII())
+    elif options.type == 'mrn':
+        print(generate_mrn(options.length))
+    elif options.type == 'id':
+        print(generate_id(options.length))
+
+    # Command line alias to add to ~/.bash_profile
+    # alias genpii='python -m generators \1 \2 \3 \4'
+    # \n are command line arguments
