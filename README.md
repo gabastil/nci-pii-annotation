@@ -14,15 +14,19 @@ Argument | Example | Description
 1 | `-t pii` | `-t {pii, mrn, id}` : Type of data to generate
 2 | `-l 15` | `-l {1..n}` : Length of ID to generated. Default = 20 characters
 
-## Compare Document Contents
-
-Use the `python` interpreter.
+Examples
 
 ```bash
-python
+>> # This will generate a full pii profile including names, SSNs, addresses, and other information
+>> user@computer$ python -m generator -t pii
+>>
+>> # This will generate a medical record number (MRN) that is 9 digits long
+>> user@computer$ python -m generator -t mrn -l 9
 ```
 
-Import and use compare directory.
+## Compare Document Contents
+
+Use the `python` interpreter. Import and use compare directory.
 
 ```python
 from compare import compare_directory
