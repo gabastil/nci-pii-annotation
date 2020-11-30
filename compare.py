@@ -12,7 +12,7 @@ def get_hash(doc):
     '''
     return hash(get_text(doc))
 
-def is_checked(doc1, doc2):
+def is_checked(doc1, doc2, checked):
     ''' Return True if both documents already exist in memo, False if other otherwise
 
     Parameters
@@ -74,7 +74,7 @@ def compare_directory(directory, glob='rec*'):
         for j, second in enumerate(documents):
             different_ij = i != j
             valid_ij = i < list_size and j < list_size
-            not_checked = not is_checked(first, second)
+            not_checked = not is_checked(first, second, checked)
 
             if different_ij and valid_ij and not_checked:
                 checked = compare_documents(first, second, checked)

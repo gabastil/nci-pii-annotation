@@ -13,6 +13,9 @@ def parse(document):
         document : str, Path
             Path to XML document for parsing
     '''
+    if isinstance(document, str):
+        document = Path(document)
+
     with document.open('r') as fin:
         lines = [__.strip() for __ in fin.readlines() if __.strip()][1:] # Skip the first xml tag to parse NCI.XMLs
         content = ''.join(lines)
