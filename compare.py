@@ -12,6 +12,26 @@ def get_hash(doc):
     '''
     return hash(get_text(doc))
 
+def is_checked(doc1, doc2):
+    ''' Return True if both documents already exist in memo, False if other otherwise
+
+    Parameters
+    ----------
+        doc1 : Path
+            Path to first file to check
+        doc2 : Path
+            Path to second file to check
+        checked : dict
+            Object with documents previously checked for memoization
+    '''
+    if doc1 in checked and doc2 in checked[doc1]:
+        return True
+
+    if doc2 in checked and doc1 in checked[doc2]:
+        return True
+
+    return False
+
 def compare_documents(doc1, doc2, checked):
     ''' Return True of specified documents have the same content
 
@@ -52,8 +72,11 @@ def compare_directory(directory, glob='rec*'):
 
     for i, first in enumerate(documents):
         for j, second in enumerate(documents):
+            different_ij = i != j
+            valid_ij = i < list_size and j < list_size
+            not_checked = not is_checked(first, second)
 
-            if i != j and i < list_size and j < list_size:
+            if different_ij and valid_ij and not_checked:
                 checked = compare_documents(first, second, checked)
 
     return checked
